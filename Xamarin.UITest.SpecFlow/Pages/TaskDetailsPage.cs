@@ -1,0 +1,103 @@
+﻿using System;
+using System.Linq;
+using NUnit.Framework;
+using Xamarin.UITest;
+
+// Aliases Func<AppQuery, AppQuery> with Query
+using Query = System.Func<Xamarin.UITest.Queries.AppQuery, Xamarin.UITest.Queries.AppQuery>;
+
+namespace Xamarin.UITest.SpecFlow
+{
+    public class TaskDetailsPage : BasePage
+    {
+        readonly Query nameField;
+        readonly Query notesField;
+        readonly Query saveButton;
+        readonly Query deleteButton;
+        readonly Query doneIndicator;
+
+        protected override PlatformQuery Trait => new PlatformQuery
+        {
+            Android = x => x.Marked("menu_save_task"),
+            iOS = x => x.Marked("Task Details")
+        };
+
+        public TaskDetailsPage()
+        {
+            if (OnAndroid)
+            {
+                nameField = x => x.Marked("txtName");
+                notesField = x => x.Marked("txtNotes");
+                saveButton = x => x.Marked("menu_save_task");
+                deleteButton = x => x.Marked("menu_delete_task");
+                doneIndicator = x => x.Marked("chkDone");
+            }
+
+            if (OniOS)
+            {
+                nameField = x => x.Marked("task name");
+                notesField = x => x.Marked("other task info");
+                saveButton = x => x.Marked("Save");
+                deleteButton = x => x.Marked("Delete");
+                doneIndicator = x => x.Class("UISwitch");
+            }
+        }
+
+        public TaskDetailsPage EnterTask(string name, string notes = null)
+        {
+            if (OnAndroid)
+            {
+                app.EnterText(nameField, name);
+
+                if (notes != null)
+                    app.EnterText(notesField, notes);
+            }
+
+            if (OniOS)
+            {
+                app.EnterText(nameField, name);
+                app.PressEnter();
+
+                if (notes != null)
+                    app.EnterText(notesField, notes);
+
+                app.PressEnter();
+            }
+
+            return this;
+        }
+
+        public TaskDetailsPage TapDone()
+        {
+            app.DismissKeyboard();
+            app.Tap(doneIndicator);
+
+            return this;
+        }
+
+        public TaskDetailsPage VerifyDone(bool done = true)
+        {
+            if (OnAndroid)
+            {
+                Assert.True((bool)app.Query(x => doneIndicator(x).Invoke("isChecked")).First());
+            }
+
+            if (OniOS)
+            {
+                Assert.AreEqual(1, app.Query(x => doneIndicator(x).Invoke("isOn")).First());
+            }
+
+            return this;
+        }
+
+        public void Save()
+        {
+            app.Tap(saveButton);
+        }
+
+        public void Delete()
+        {
+            app.Tap(deleteButton);
+        }
+    }
+}
