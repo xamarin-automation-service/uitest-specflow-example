@@ -5,10 +5,10 @@ This project demonstrates how to use SpecFlow with Xamarin.UITest and is based o
 ## Running these tests on your Mac
 
 1. Add "Straight8's SpecFlow Integration" extension to Visual Studio for Mac
-    1. Go to the "Visual Studio" menu and click "Extensions..."
-    1. Search for "SpecFlow" and install
-    1. You might also want the "FileNesting" extension to help keep everything tidy
-    1. Restart Visual Studio
+    * Go to the "Visual Studio" menu and click "Extensions..."
+    * Search for "SpecFlow" and install
+    * You might also want the "FileNesting" extension to help keep everything tidy
+    * Restart Visual Studio
 1. Clone this repo
 1. Build
 1. Run*
